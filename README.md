@@ -2,8 +2,8 @@
    EchoPDF: AI-powered PDF interaction and management platform. This repo provides an overview of the project, highlighting key features, technical challenges, and implementation details of a full-stack web application built with MERN, Pinecone, Stripe, Clerk, S3, deployed on GCP.
    
    ## Table of Contents
-   1. [Project Overview](#project-overview)
-   2. [Key Features](#key-features)
+   1. [Project Overview](#1-project-overview)
+   2. [Key Features](#2-key-features)
    3. [Try It Out](#try-it-out)
    4. [Technical Stack](#technical-stack)
    5. [Architecture Overview](#architecture-overview)
