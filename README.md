@@ -188,22 +188,19 @@
    - Planned feature for editing last user prompt or refreshing latest AI response
    - Enhanced folder management (rename, delete, etc.)
 
-## 4. Try It Out
-Experience EchoPDF firsthand at https://echopdf.com. For your convenience and security, all HTTP and www routes are automatically redirected to the secure HTTPS version of the site.
-Here's how you can get started:
+## 3. Try It Out
+Experience EchoPDF firsthand at [https://echopdf.com](https://echopdf.com). For your convenience and security, all HTTP and www routes are automatically redirected to the secure HTTPS version of the site. Here's how you can get started:
 
 1. Visit EchoPDF.com and create a free tier account using any email address or your Gmail account.
 2. Once registered, you'll have immediate access to:
-
-- Upload up to 200 PDF pages
-- Ask 100 questions using the GPT-3.5-turbo model
-- Explore all core features of the application
-
+   * Upload up to 200 PDF pages
+   * Ask 100 questions using the GPT-3.5-turbo model
+   * Explore all core features of the application
 3. Free tier users can fully experience the power of EchoPDF, including:
-- AI-powered PDF interaction
-- Custom PDF viewer with adjustable layout
-- Template gallery for efficient prompts
-- Basic document management features
+   * AI-powered PDF interaction
+   * Custom PDF viewer with adjustable layout
+   * Template gallery for efficient prompts
+   * Basic document management features
 
 I encourage you to explore the application, test its capabilities, and see how EchoPDF can enhance your PDF interaction experience. If you find the service valuable as a user, consider upgrading to the paid tiers for increased limits and additional premium features.
 
@@ -375,6 +372,8 @@ The frontend is organized into several key directories:
 2. Accessibility: Ensure all components meet WCAG guidelines for accessibility.
 3. Testing: Implement a comprehensive testing strategy, including unit tests, using frameworks like Cypress for frontend and Mocha for backend, for utility functions and components.
 
+---
+
 This frontend architecture provides a balance between simplicity and scalability. The use of Context API for state management keeps the application's data flow straightforward, while the modular component structure allows for easy expansion and maintenance. As EchoPDF grows, this architecture can be easily adapted to incorporate more advanced patterns or optimizations as needed.
 
 ## 5.3 Backend Architecture
@@ -423,7 +422,13 @@ The application uses a combination of custom middleware and third-party solution
    * Manages ChatGPT token usage and credit deduction
    * Implements context truncation for ChatGPT API requests
 
-3. **Error Handling Middleware**:
+3. **Pinecone Database Management Middleware**:
+
+   * Ensures namespace allocation for users in the Pinecone vector database
+   * Manages index creation and maintenance for efficient vector storage and retrieval
+   * Automatically handles resource allocation based on user tiers and usage patterns
+
+4. **Error Handling Middleware**:
    * Centralized error handling to ensure consistent error responses
 
 ### Webhook Handling:
@@ -455,6 +460,153 @@ A dedicated webhook handler is implemented to process Stripe events:
 ### Scalability Considerations:
 * The modular structure allows for easy scaling of individual components
 * Stateless design principles are followed to allow for horizontal scaling
+
+  
+
+## 5.4 Database Architecture
+
+EchoPDF utilizes MongoDB, a NoSQL database, which perfectly aligns with the application's data structure and scalability needs. The database architecture is designed to be flexible, efficient, and easily scalable, supporting the various features of the application without the need for complex relationships.
+
+### Schema Design
+
+#### 1. User Schema
+- Comprehensive user model capturing authentication, subscription, usage, and preferences
+- Includes methods for updating usage, managing subscriptions, and credit operations
+
+#### 2. Chat and Message Schemas
+- Separate schemas for chat sessions and individual messages
+- Efficiently stores chat history with references to PDFs and AI model preferences
+
+#### 3. PDF File and Vector Schemas
+- Manages PDF file metadata and associated vector data for AI operations
+- Optimized for quick retrieval and association with user accounts
+
+#### 4. Template Schemas
+- Supports both system-wide templates and user-specific template collections
+- Flexible structure to accommodate various template types and parameters
+
+#### 5. Folder Schema
+- Implements a hierarchical structure for organizing PDF files
+- Optimized for efficient querying of user's folder structure
+
+#### 6. Category and Tag Schemas
+- Supports categorization and tagging of templates
+- Enables efficient filtering and organization of content
+
+#### 7. Interaction Schema
+- Tracks user interactions with templates (upvotes, downvotes, flags)
+- Designed for efficient updating and querying of user interactions
+
+#### 8. Counter Schemas
+- Manages namespace and index allocation for Pinecone database
+- Supports efficient scaling and resource management
+
+### Key Design Principles
+
+1. **Denormalization**
+   - Data is strategically denormalized to optimize read performance
+   - Reduces the need for complex joins, enhancing query efficiency
+
+2. **Indexing**
+   - Strategic indexes are implemented on frequently queried fields
+   - Improves query performance, especially for user-specific and time-based queries
+
+3. **Embedded Documents**
+   - Utilizes embedded documents for closely related data (e.g., template parameters)
+   - Enhances read performance and maintains data locality
+
+4. **Reference-based Relationships**
+   - Uses references for looser relationships (e.g., chats referencing PDF files)
+   - Balances between data consistency and query performance
+
+5. **Schema Methods**
+   - Implements schema-level methods for common operations
+   - Encapsulates business logic at the data model level, promoting code reusability and maintainability
+
+### Scalability Considerations
+
+1. **Sharding Readiness**
+   - Schemas are designed with potential sharding in mind (e.g., userId as a common field)
+   - Enables horizontal scaling as the application grows
+
+2. **Flexible Schema**
+   - MongoDB's flexible schema allows for easy additions to data models as new features are developed
+
+3. **Efficient Querying**
+   - Schema design prioritizes the most common query patterns in the application
+
+### Data Integrity and Consistency
+
+1. **Validation**
+   - Utilizes Mongoose schema validations to ensure data integrity
+   - Implements custom validation logic where necessary
+
+2. **Atomic Operations**
+   - Uses MongoDB's atomic operations for critical updates (e.g., credit management)
+
+3. **Timestamps**
+   - Automatic timestamp management for tracking document creation and updates
+
+---
+
+This database architecture provides a solid foundation for EchoPDF, offering flexibility, performance, and scalability. The NoSQL approach of MongoDB aligns well with the application's needs, allowing for rapid development and easy adaptation to changing requirements. The thoughtful schema design, with its focus on denormalization and efficient querying, ensures that the database can handle the application's current needs while being prepared for future growth and feature additions.
+
+## 5. Deployment Architecture
+
+EchoPDF is deployed on Google Cloud Platform (GCP), leveraging its robust infrastructure to ensure reliability and scalability. Here's an overview of the deployment setup:
+
+### 5.1 Google Cloud Platform Configuration
+
+- **Zone**: us-east4-c
+- **Machine Type**: e2-medium
+- **CPU Platform**: Intel Broadwell
+- **Architecture**: x86/64
+- **Operating System**: Debian 12 Bookworm
+
+### 5.2 Networking
+
+- **Public IP**: 35.245.124.145 (Ephemeral)
+- **Internal IP**: 10.150.0.2
+- **Network Tier**: Premium
+- **Firewalls**: HTTP and HTTPS traffic enabled
+- **Network Tags**: http-server, https-server
+
+### 5.3 Storage
+
+- **Boot Disk**: 10 GB Balanced Persistent Disk
+- **Interface Type**: SCSI
+- **Encryption**: Google-managed
+
+### 5.4 Nginx Configuration
+
+I use Nginx as a reverse proxy to handle incoming requests and route them to the application server. Key aspects of the Nginx configuration include:
+
+- HTTP to HTTPS redirection
+- WWW to non-WWW redirection
+- SSL certificate management using Let's Encrypt
+- Proxy settings for the Node.js application running on port 3001
+- Security headers (X-Frame-Options, X-XSS-Protection, X-Content-Type-Options)
+- Custom error page for 502 errors
+
+### 5.5 SSL Certificate Management
+
+SSL certificates are obtained and managed using Let's Encrypt. I've set up a Python script to automatically renew the certificates periodically, ensuring uninterrupted HTTPS support.
+
+### 5.6 Application Deployment
+
+The Node.js application is run using PM2, a process manager for Node.js applications. This setup allows for:
+
+- Automatic restarts in case of crashes
+- Load balancing (if needed in the future)
+- Easy log management
+
+### 5.7 Scalability and Future Considerations
+
+While the current setup is suitable for the present scale of EchoPDF, the use of GCP allows for easy scaling in the future. Potential upgrades could include:
+
+- Increasing machine resources (CPU, RAM) as demand grows
+- Implementing a load balancer for distributing traffic across multiple instances
+- Setting up auto-scaling groups to handle traffic spikes automatically
 
 ## 6. Core Components
 
