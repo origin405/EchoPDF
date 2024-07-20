@@ -187,8 +187,276 @@
    - One-click template copying from gallery to personal collection
    - Planned feature for editing last user prompt or refreshing latest AI response
    - Enhanced folder management (rename, delete, etc.)
-   
-   ## 6. Core Components
+
+## 4. Try It Out
+Experience EchoPDF firsthand at https://echopdf.com. For your convenience and security, all HTTP and www routes are automatically redirected to the secure HTTPS version of the site.
+Here's how you can get started:
+
+1. Visit EchoPDF.com and create a free tier account using any email address or your Gmail account.
+2. Once registered, you'll have immediate access to:
+
+- Upload up to 200 PDF pages
+- Ask 100 questions using the GPT-3.5-turbo model
+- Explore all core features of the application
+
+3. Free tier users can fully experience the power of EchoPDF, including:
+- AI-powered PDF interaction
+- Custom PDF viewer with adjustable layout
+- Template gallery for efficient prompts
+- Basic document management features
+
+I encourage you to explore the application, test its capabilities, and see how EchoPDF can enhance your PDF interaction experience. If you find the service valuable as a user, consider upgrading to the paid tiers for increased limits and additional premium features.
+
+Feel free to reach out with any questions or feedback - I'm always looking to improve your experience with EchoPDF!
+
+For EchoPDF-related matters, please contact: echopdf.service@gmail.com
+For employment opportunities, partnerships, or project collaborations, you can reach me directly at: marvinnlhy@gmail.com
+
+As a solo developer, I'm excited to hear from users, potential collaborators, and anyone interested in the project. Your feedback and ideas are invaluable in shaping the future of EchoPDF. Whether you're a user with suggestions, a company looking to integrate similar technology, or just someone curious about the project, don't hesitate to get in touch. I'm always open to discussions that could lead to improving EchoPDF or exploring new opportunities in the tech world.
+
+## 4. Technical Stack
+### Overview
+**Final Year Project:**
+- Frontend: Vanilla JavaScript, pdf.js
+- Backend: Node.js, Express
+- Database: MongoDB
+- Authentication: Clerk
+- Storage: AWS S3
+- AI: ChatGPT API
+- Deployment: Heroku
+
+**EchoPDF:**
+- Frontend: React, pdf.js
+- Backend: Node.js, Express
+- Database: MongoDB
+- Authentication: Clerk
+- Storage: AWS S3
+- Vector Database: Pinecone
+- Payment: Stripe
+- AI: ChatGPT API (GPT-3.5, GPT-4)
+- Deployment: Google Cloud Platform (Compute Engine)
+
+### PDF Viewer Selection
+When I started building EchoPDF, it began as my final year project - a much simpler version of what it is now. One of the toughest decisions early on was choosing a PDF viewer library. Being my first real development project, I wanted to stick with vanilla JavaScript, ruling out npm packages like react-pdf. This left me with either pdf.js dist or the pdf.js repo.
+I was pretty set on including as many essential PDF features as possible - annotations, sidebar, word search, you name it. This bias stuck with me even as EchoPDF evolved. I ended up choosing the pdf.js repo code, despite it being more challenging to work with, because it offered the full range of features I wanted.
+
+### Frontend Framework
+For the framework, I went with React. It's popular, which usually means good community support, and I liked how the latest updates seemed to clean up a lot of the code complexity. Plus, it plays nice with Clerk and Stripe, offering component support which is a huge plus.
+Integrating pdf.js with React was a bit of a head-scratcher. I had to decide between migrating pdf.js to my Create React App setup (where I'd already built the template gallery and auth routing) or bringing React into pdf.js. In the end, I moved React into pdf.js and used webpack to run JSX. I had to wrap the pdf.js web viewer with React to make it work as a component, mainly because I needed the viewer to take up half the screen width with an adjustable bar.
+
+### CSS Framework
+For styling, I chose Tailwind CSS. It was a bit of a learning curve at first, but I quickly found it incredibly efficient for rapid UI development. The utility-first approach allowed me to create consistent designs without leaving my HTML (or JSX in this case). It also integrates well with React, making component styling a breeze. The purge feature in production builds keeps the final CSS bundle small, which is great for performance. Overall, Tailwind CSS proved to be a great choice for building a responsive and visually appealing interface for EchoPDF.
+
+### Backend
+For the backend, I went with Express. It just seems like the go-to for JavaScript backends, and I didn't see any close seconds. MongoDB was my choice for the database. It's easy to use and efficient to query. For this kind of app, with lots of component-based data that doesn't really need to talk to each other much, NoSQL felt like a better fit than SQL.
+
+### Payment Processing
+Stripe was the obvious choice for payments. Their test environment, reasonable pricing (1 MYR + 3%), and CLI tools for webhook testing were crucial for building a solid, bug-free payment system.
+
+### Authentication
+I picked Clerk for authentication somewhat impulsively. It's popular, has a free tier, and offers components for both vanilla JS and React. In hindsight, since I deployed on Google Cloud, Firebase might have been a more cohesive choice, offering centralized auth and database services. But I stuck with Clerk and MongoDB since I was already familiar with them.
+
+### Vector Database
+For vector storage, I went with Pinecone DB. I learned about it through a YouTube tutorial that taught me the basics of vectorizing PDF content and using OpenAI's Ada 2 for embeddings. The pricing is very reasonable with their serverless tier.
+
+### File Storage
+I stuck with AWS S3 for file storage because I'd used it in my final year project and found it reliable and easy to set up. Again, Firebase storage could have been an option for more centralization, but I went with what I knew.
+
+### AI Model
+ChatGPT was really the only game in town for the AI model. The 3.5 model works great for the base offer, with GPT-4 Turbo and GPT-4 offered as premium options. I'm considering adding Anthropic models in the future, especially since their Sonnet 3.5 is probably the best model out there right now.
+
+### Deployment
+For deployment, I went with Google Cloud Platform, using a Compute Engine VM with 10GB RAM and 2 cores running Debian Linux. It took two full days to deploy, but I think it was worth it for the customization options. I'm using Nginx to route traffic to my proxy server on port 3001, and I've set up SSL certs which are crucial for Stripe and for user trust.
+
+### DevOps
+My DevOps setup is pretty basic - I'm using GitHub for version control, pulling code to my VM, and using PM2 to manage my server instance. This setup allows for near-zero downtime during code pushes.
+I haven't gotten into Docker or Kubernetes yet - for now, this setup is working well for the scale of EchoPDF.
+
+## 5.0 Architecture Overview
+
+### 5.1 Overall System Architecture
+
+EchoPDF follows a modern web application architecture, combining a Single Page Application (SPA) frontend with a RESTful API backend. This setup is implemented as a "Single-Repository Decoupled Architecture" or a "Monorepo with Decoupled Frontend and Backend."
+
+**Current Implementation:**
+- Frontend: React-based SPA
+- Backend: Node.js with Express.js framework
+- Repository Structure: Monorepo (frontend and backend in one repository)
+- Build Process: Webpack for bundling frontend code
+- Deployment: PM2 runs the server, which serves static files from the public build directory
+
+The frontend, built with React, handles the user interface and client-side logic. It communicates with the backend through RESTful API calls. The backend, powered by Node.js and Express.js, processes these requests, interacts with the database and external services, and sends responses back to the frontend.
+
+**Key Architectural Aspects:**
+1. Component-Based Frontend: React's component architecture allows for modular, reusable UI elements.
+2. Single Page Application: Provides a fluid, desktop-like user experience with minimal page reloads.
+3. RESTful Backend: Express.js server structured to handle API requests efficiently.
+4. Decoupled Design: Despite being in one repository, frontend and backend concerns are separated.
+
+**Alternatives Considered:**
+1. Multi-Page Application (MPA): Traditional website structure with separate HTML pages.
+   - Pros: Better SEO out of the box, simpler architecture for very simple sites.
+   - Cons: Slower navigation, more server load, less fluid user experience.
+
+2. Server-Side Rendering (SSR):
+   - Pros: Better initial load times, improved SEO.
+   - Cons: More complex setup, potentially unnecessary for EchoPDF's core functionality.
+
+3. Microservices Architecture:
+   - Pros: Highly scalable, allows independent scaling of different features.
+   - Cons: More complex to set up and manage, potentially overkill for the current scale of EchoPDF.
+
+**Reasoning:**
+The chosen architecture strikes a balance between development simplicity and application performance. The SPA approach is well-suited for EchoPDF's interactive nature, providing a smooth user experience for PDF viewing and AI interactions. The monorepo structure simplifies development and deployment processes while still maintaining a clear separation of frontend and backend concerns.
+
+**Considerations for Improvement:**
+1. SEO Optimization: If needed, implement SSR for specific routes (e.g., landing page, documentation) using a framework like Next.js.
+2. State Management: As the application grows, consider introducing a more robust state management solution.
+3. Code Splitting: Implement lazy loading for different parts of the application to improve initial load times.
+4. API Gateway: For future scaling, consider introducing an API gateway for better request management and potential microservices integration.
+
+This architecture provides a solid foundation for EchoPDF's current needs while leaving room for future scaling and feature additions. The modular nature of this setup allows for incremental improvements and optimizations as the user base and feature set grow.
+
+## 5.2 Frontend Architecture
+
+EchoPDF's frontend is built using React, embracing a component-based architecture that prioritizes modularity, reusability, and clear separation of concerns. This approach allows for efficient development and easier maintenance as the application grows.
+
+### Key Components:
+1. React: The core library used for building the user interface.
+2. Context API: Used for state management, avoiding the need for more complex solutions like Redux.
+3. Tailwind CSS: Utilized for styling, providing a utility-first approach to CSS.
+
+### State Management:
+1. Context API is the primary method for managing global state.
+2. The application follows a rule of allowing one level of prop drilling. Any state that needs to be passed down more than one level is managed through Context.
+3. This approach balances the simplicity of prop passing with the power of centralized state management.
+
+### Component Structure:
+The frontend is organized into several key directories:
+
+1. **Pages**:
+   - Contains top-level components that represent entire pages.
+   - Each page component is responsible for layout and composing smaller components.
+
+2. **Components**:
+   - Houses reusable UI components.
+   - Organized into sub-folders based on the specific pages or features they relate to.
+   - This structure helps in quickly locating and managing related components.
+
+3. **Layout**:
+   - Contains components that define the overall structure of the application (e.g., headers, footers, navigation).
+
+4. **Utils**:
+   - Includes utility functions and helper code used across the application.
+
+### Performance Optimizations:
+1. **Code Splitting**: Utilizes React.lazy() and Suspense for lazy-loading components.
+   - This approach improves initial load times by only loading necessary components.
+   - Particularly beneficial for larger features or less frequently accessed parts of the application.
+
+2. **Dynamic Imports**: Employed for route-based code splitting, ensuring that code for each route is loaded on demand.
+
+### Styling Approach:
+1. Tailwind CSS is used for styling components.
+2. This utility-first approach allows for rapid UI development and consistent design across the application.
+
+### Design Principles:
+1. Modularity: Components are designed to be self-contained and reusable where possible.
+2. Separation of Concerns: Each component has a clear, specific responsibility.
+3. Hierarchical Structure: The component tree is organized to reflect the natural hierarchy of the UI.
+
+### Data Flow:
+1. API calls are typically made from page-level components or custom hooks using fetch.
+2. Data is then passed down to child components via props or made available through Context.
+3. Components use local state (useState hook) for managing component-specific data.
+
+### Considerations and Future Improvements:
+1. Performance Optimization: Regular audits using React DevTools to identify and resolve performance bottlenecks.
+2. Accessibility: Ensure all components meet WCAG guidelines for accessibility.
+3. Testing: Implement a comprehensive testing strategy, including unit tests, using frameworks like Cypress for frontend and Mocha for backend, for utility functions and components.
+
+This frontend architecture provides a balance between simplicity and scalability. The use of Context API for state management keeps the application's data flow straightforward, while the modular component structure allows for easy expansion and maintenance. As EchoPDF grows, this architecture can be easily adapted to incorporate more advanced patterns or optimizations as needed.
+
+## 5.3 Backend Architecture
+
+EchoPDF's backend is built on Node.js with Express.js, following a modular and scalable architecture. The server is structured to handle various aspects of the application efficiently, with clear separation of concerns and well-organized API endpoints.
+
+### Server Setup:
+* The main server runs on localhost:3001
+* CORS is configured to handle requests from the EchoPDF domain
+* Express.js is used as the web application framework
+
+### API Structure:
+The API endpoints are organized into logical groups based on functionality:
+
+1. **Document Handling API** (/api/documents):
+   * Manages PDF upload, retrieval, and deletion
+   * Interacts with AWS S3 for file storage
+
+2. **Template API** (/api/templates):
+   * Handles CRUD operations for prompt templates
+   * Manages template categories and user interactions
+
+3. **ChatGPT Integration API** (/api/chat):
+   * Processes chat requests and interactions with the ChatGPT model
+   * Manages token usage and model selection
+
+4. **Vector Database API** (/api/vector):
+   * Interfaces with Pinecone for vector storage and retrieval
+   * Handles document embedding and semantic search operations
+
+5. **User Management API** (/api/users):
+   * Manages user profiles, settings, and subscription information
+
+6. **Subscription and Payment API** (/api/subscription):
+   * Handles subscription management and integrates with Stripe
+
+### Middleware:
+The application uses a combination of custom middleware and third-party solutions:
+
+1. **Authentication Middleware**:
+   * Utilizes ClerkRequireAuth for protecting sensitive endpoints
+   * Ensures that only authenticated users can access protected resources
+
+2. **Usage Limit Middleware**:
+   * Checks and enforces PDF upload limits based on user tiers
+   * Manages ChatGPT token usage and credit deduction
+   * Implements context truncation for ChatGPT API requests
+
+3. **Error Handling Middleware**:
+   * Centralized error handling to ensure consistent error responses
+
+### Webhook Handling:
+A dedicated webhook handler is implemented to process Stripe events:
+* Manages various subscription-related events (e.g., invoice paid, subscription updated/deleted)
+* Handles checkout session completion
+* Includes logging functions for auditing and debugging purposes
+
+### Database Interaction:
+* Utilizes Mongoose for MongoDB interactions
+* Models are defined for various entities (User, Document, Template, etc.)
+* Implements efficient querying patterns to optimize database operations
+
+### External Service Integration:
+* AWS S3 for file storage
+* Pinecone for vector database operations
+* OpenAI API for ChatGPT interactions
+* Stripe for payment processing
+
+### Logging and Monitoring:
+* Implements comprehensive logging for critical operations and errors
+* Utilizes a centralized logging system for easier debugging and monitoring
+
+### Security Measures:
+* Implements rate limiting to prevent abuse
+* Uses helmet.js for setting various HTTP headers for security
+* Ensures secure handling of sensitive information (API keys, user data)
+
+### Scalability Considerations:
+* The modular structure allows for easy scaling of individual components
+* Stateless design principles are followed to allow for horizontal scaling
+
+## 6. Core Components
 
 ### 6.1 User Authentication and Authorization
 
