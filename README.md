@@ -1526,7 +1526,42 @@ This color control feature not only enhances the current functionality of EchoPD
 This phase of the project was crucial in transforming the theoretical integration of PDF.js and React into a fully functional, responsive PDF viewer component. The solutions implemented not only resolved immediate issues but also laid the groundwork for future enhancements and feature additions in EchoPDF.
 
 
+## 7.4 Custom Highlight Feature Implementation
 
+### Problem Statement:
+Early in the EchoPDF project development, PDF.js lacked native highlighting capabilities. To provide users with essential PDF interaction features, I needed to create a custom highlighting solution that could handle complex scenarios such as multi-page and overlapping highlights.
+
+### Approach:
+Inspired by PDF.js's text search highlighting mechanism, I developed a custom highlighting feature that directly manipulates the text layer of the PDF. This approach involved:
+
+1. Capturing text selections using the browser's Range object
+2. Creating a structured highlight data object
+3. Manipulating the DOM to apply highlights
+4. Handling complex scenarios like partial and complete overlaps
+5. Ensuring highlight persistence across page reloads
+
+### Key Challenges:
+1. Accurately capturing and recreating text selections across multiple spans and pages
+2. Managing various overlap scenarios (left, right, double, and complete)
+3. Ensuring performance with large documents and numerous highlights
+4. Integrating the feature with PDF.js's dynamic page rendering
+
+### Solution Highlights:
+* Implemented efficient DOM traversal using TreeWalker
+* Developed algorithms for handling complex overlap scenarios
+* Created a dual storage system (page-specific and master highlights) for efficient data management
+* Utilized lazy rendering and batched DOM updates for performance optimization
+
+### Key Learnings:
+* Gained deep insights into DOM manipulation and PDF.js rendering processes
+* Recognized the importance of staying updated with library developments
+* Understood the value of being willing to pivot when better solutions emerge
+
+While PDF.js later introduced its own highlighting feature, this project demonstrates the ability to conceptualize and implement complex features from scratch, showcasing problem-solving skills and the capacity to work with intricate document structures.
+
+For a detailed explanation of the implementation, including code snippets and in-depth discussion of the challenges faced, please visit the [PDF.js Custom Highlight Feature repository](https://github.com/origin405/pdfjs-custom-highlight-feature).
+
+[Note: Once you've added the video demonstration, you can mention it here as well, e.g., "A video demonstration of the feature in action is available in the repository."]
 
 
 
