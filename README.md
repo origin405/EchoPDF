@@ -42,7 +42,7 @@
    - Customizable PDF viewer interface
    - Prompt template gallery with sharing and interactable posts, and template copying functionality to personal template collection
    
-   As both a potential startup product and a comprehensive portfolio piece, EchoPDF showcases a range of technical skills across the full stack of web development, such as:
+As both a potential startup product and a comprehensive portfolio piece, I have learnt and applied a range of technical skills across the full stack of web development, such as:
    
    - Modern front-end development with React
    - Back-end development using Node.js
@@ -62,7 +62,7 @@
    
    Key milestones in the project's development:
    
-   - Early December 2023: I started learning full-stack development for the first time with 4 months of internship experience with FusionEx Malaysia on front-end, am charts, kojs experience. 
+   - Early December 2023: I started learning full-stack development for the first time, with only 4 months of front-end experience I've acquired from my internship with FusionEx Malaysia working with am charts and knockoutJS. 
    - Early January 2024: I completed initial MVP for final year project, deployed on Heroku after submission
    - February 2024: I completed final exams and pratically graduated with a general CS degree
    - Late February 2024: I decided to expand EchoPDF into a comprehensive startup/product-like application
@@ -551,11 +551,11 @@ EchoPDF utilizes MongoDB, a NoSQL database, which perfectly aligns with the appl
 
 This database architecture provides a solid foundation for EchoPDF, offering flexibility, performance, and scalability. The NoSQL approach of MongoDB aligns well with the application's needs, allowing for rapid development and easy adaptation to changing requirements. The thoughtful schema design, with its focus on denormalization and efficient querying, ensures that the database can handle the application's current needs while being prepared for future growth and feature additions.
 
-## 5. Deployment Architecture
+## 5.5 Deployment Architecture
 
 EchoPDF is deployed on Google Cloud Platform (GCP), leveraging its robust infrastructure to ensure reliability and scalability. Here's an overview of the deployment setup:
 
-### 5.1 Google Cloud Platform Configuration
+### Google Cloud Platform Configuration
 
 - **Zone**: us-east4-c
 - **Machine Type**: e2-medium
@@ -563,7 +563,7 @@ EchoPDF is deployed on Google Cloud Platform (GCP), leveraging its robust infras
 - **Architecture**: x86/64
 - **Operating System**: Debian 12 Bookworm
 
-### 5.2 Networking
+### Networking
 
 - **Public IP**: 35.245.124.145 (Ephemeral)
 - **Internal IP**: 10.150.0.2
@@ -571,13 +571,13 @@ EchoPDF is deployed on Google Cloud Platform (GCP), leveraging its robust infras
 - **Firewalls**: HTTP and HTTPS traffic enabled
 - **Network Tags**: http-server, https-server
 
-### 5.3 Storage
+### Storage
 
 - **Boot Disk**: 10 GB Balanced Persistent Disk
 - **Interface Type**: SCSI
 - **Encryption**: Google-managed
 
-### 5.4 Nginx Configuration
+### Nginx Configuration
 
 I use Nginx as a reverse proxy to handle incoming requests and route them to the application server. Key aspects of the Nginx configuration include:
 
@@ -588,11 +588,11 @@ I use Nginx as a reverse proxy to handle incoming requests and route them to the
 - Security headers (X-Frame-Options, X-XSS-Protection, X-Content-Type-Options)
 - Custom error page for 502 errors
 
-### 5.5 SSL Certificate Management
+### SSL Certificate Management
 
 SSL certificates are obtained and managed using Let's Encrypt. I've set up a Python script to automatically renew the certificates periodically, ensuring uninterrupted HTTPS support.
 
-### 5.6 Application Deployment
+### Application Deployment
 
 The Node.js application is run using PM2, a process manager for Node.js applications. This setup allows for:
 
@@ -600,7 +600,7 @@ The Node.js application is run using PM2, a process manager for Node.js applicat
 - Load balancing (if needed in the future)
 - Easy log management
 
-### 5.7 Scalability and Future Considerations
+### Scalability and Future Considerations
 
 While the current setup is suitable for the present scale of EchoPDF, the use of GCP allows for easy scaling in the future. Potential upgrades could include:
 
@@ -1097,3 +1097,442 @@ This order ensures that invalid requests are rejected early in the process, savi
 
 
 This document management system forms a critical part of EchoPDF, showcasing the integration of various technologies (MongoDB, AWS S3, Multer) while addressing important aspects such as security, performance, and user experience. The tiered upload system demonstrates a well rounded approach to user management and resource allocation, crucial for a SaaS product like EchoPDF.
+
+
+
+
+## 7. Key Technical Challenges
+## 7.1 Implementing Real-time Social Interactions with Optimistic Updates
+
+### Problem
+
+The initial implementation of the template gallery's social features (upvoting, downvoting, and flagging) resulted in a noticeable delay between user actions and UI updates. This lag was due to waiting for server confirmation before updating the interface, leading to a suboptimal user experience.
+
+### Initial Approach
+
+The first implementation followed a standard request-response pattern:
+1. User interacts with a template (e.g., upvotes)
+2. Send a request to the server
+3. Wait for the server's response
+4. Update the UI based on the server's response
+
+This approach led to several issues:
+* Users experienced a delay between their action and seeing the result
+* The UI could become out of sync if multiple users interacted simultaneously
+* Poor network conditions significantly degraded the user experience
+
+### Solution: Optimistic Updates
+
+To address these issues, I implemented an optimistic update strategy:
+
+1. Created an InteractionContext to manage interaction state across components:
+
+```javascript
+export const InteractionProvider = ({ children }) => {
+  const [interactions, setInteractions] = useState([]);
+  // ... other code ...
+  return (
+    <InteractionContext.Provider value={{ interactions, updateInteraction }}>
+      {children}
+    </InteractionContext.Provider>
+  );
+};
+```
+2. Implemented optimistic update logic in the updateInteraction function:
+
+```javascript
+const updateInteraction = async (postId, interactionType) => {
+  // Immediately update local state
+  const newInteractions = interactions.map(interaction => {
+    if (interaction.postId === postId) {
+      // Update interaction logic
+    }
+    return interaction;
+  });
+
+  // Optimistically update state
+  setInteractions(newInteractions);
+
+  try {
+    // Send request to server
+    // Update template schema
+  } catch (error) {
+    // Revert optimistic update on failure
+    setInteractions(interactions);
+  }
+};
+```
+3. Updated UI components to reflect changes immediately:
+
+```javascript
+const handleUpvote = async () => {
+  const newCounts = { ...interactionCounts };
+  // Update local counts
+  setInteractionCounts(newCounts);
+  await updateInteraction(postId, "upvote");
+};
+```
+This approach solved several issues:
+
+The UI updates instantly, providing immediate feedback to users
+The app feels more responsive, even under poor network conditions
+A consistent state is maintained across components
+
+While implementing this solution, I encountered and overcame several challenges:
+
+Managing complex state across multiple components as a react beginner
+Handling potential discrepancies between optimistic updates and server responses
+Implementing fallback mechanisms for failed server updates
+
+This implementation improved the overall user experience of the template gallery, making interactions feel more responsive and reliable.
+
+## 7.2 Integrating PDF.js Repository Code with React
+
+### Problem:
+The challenge was to incorporate the full feature set of PDF.js into a React application. Off-the-shelf npm packages for PDF.js offered only basic functionality, which was insufficient for the advanced features required in EchoPDF. The goal was to leverage the complete suite of PDF.js capabilities, including the sidebar and annotation tools, while maintaining the flexibility to add more features in the future.
+
+### Initial Approach:
+The journey began with experimentation during the final year project phase. Initially, I worked directly with the PDF.js repository code, successfully implementing custom features on top of it. This experience provided valuable insights into the structure and capabilities of PDF.js.
+
+The next step was to attempt running React code within this PDF.js setup. After some experimentation, I confirmed that it was indeed possible to integrate React into the PDF.js environment.
+
+### Challenges:
+
+1. **Webpack Configuration:**
+   The primary hurdle was configuring Webpack to properly build and run the integrated project. This involved setting up the correct entry points, output paths, and resolving various module dependencies.
+
+2. **Architectural Decision:**
+   A critical decision point was whether to migrate PDF.js into a Create React App (CRA) setup or to bring React into the PDF.js structure. Given the complexity of PDF.js's internal path structure and imports, migrating it into a CRA setup proved to be impractical within the project's time constraints.
+
+3. **Codebase Integration:**
+   Moving the React code into the PDF.js repository structure required careful management of file paths and imports. This was particularly challenging due to the intricate dependency structure of PDF.js.
+
+### Solution:
+
+1. **Integration Strategy:**
+   I decided to move the React code into the PDF.js repository structure. This approach allowed me to maintain the integrity of the PDF.js codebase while still leveraging React's component-based architecture.
+
+2. **Webpack Configuration:**
+   The Webpack configuration was crucial for the successful integration. Here's a simplified version of the key parts of the Webpack config:
+
+```javascript
+export default {
+  entry: {
+    main: "./react_app/index.js",
+  },
+  output: {
+    path: path.resolve(__dirname, "public"),
+    filename: "[name].bundle.js",
+    publicPath: "/",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+      },
+      // ... other rules for CSS, SVG, etc.
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "react_app/index.html"),
+      filename: "index.html",
+      chunks: ["main"],
+      inject: true,
+    }),
+    // ... other plugins
+  ],
+  resolve: {
+    // Extensive alias configuration to map PDF.js internal paths
+  },
+};
+```
+Code Translation:
+A significant part of the integration process involved translating the HTML structure of the PDF.js viewer into JSX. This required creating React components for various PDF.js elements and implementing state management where necessary. For example:
+
+```jsx
+const PDFViewer = () => {
+  const [pageNum, setPageNum] = useState(1);
+  
+  // ... other state variables
+
+  return (
+    <div ref={viewerContainerRef} className={containerClass}>
+      {/* Translated PDF.js viewer structure */}
+      <div id="toolbarViewer">
+        <input 
+          type="number" 
+          id="pageNumber" 
+          className="toolbarField pageNumber" 
+          title="Page" 
+          value={pageNum} 
+          onChange={handlePageNumChange} 
+          size="4" 
+          min="1" 
+        />
+        {/* ... other toolbar elements */}
+      </div>
+      {/* ... rest of the viewer structure */}
+    </div>
+  );
+};
+```
+Handling Dynamic Imports:
+PDF.js uses dynamic imports in some parts of its codebase. While I don't recall the exact details of how I resolved this, I remember it involved adjusting the Webpack configuration and potentially modifying some PDF.js code to make it compatible with the React setup.
+
+Lessons Learned:
+
+Build Tool Mastery: This integration deepened my understanding of build tools, particularly Webpack. I learned how to configure complex builds that merge different JavaScript paradigms and codebases.
+Codebase Analysis: The process taught me how to analyze and work with large, complex codebases like PDF.js, identifying key integration points and necessary modifications.
+Balancing Act: I learned the importance of maintaining a balance between leveraging existing code (PDF.js) and introducing new technology (React). This involved making judicious decisions about what to modify and what to keep intact.
+Modular Design: The experience reinforced the value of modular design. By keeping the React components separate from the core PDF.js functionality, I maintained flexibility for future enhancements.
+Problem-Solving Persistence: Tackling this integration challenged me to persist through complex problems, often requiring creative solutions and deep dives into both React and PDF.js documentation.
+
+This integration process was a significant technical challenge that required a deeper understanding of both React and PDF.js, as well as configuration of build tools. The successful integration laid the groundwork for the advanced PDF viewing and interaction capabilities of EchoPDF, setting it apart from basic pdf viewer solutions using general PDF libraries.
+
+
+## 7.3 Resolving Rendering and Responsiveness Issues in PDF.js-React Integration
+
+### Problem:
+After successfully integrating PDF.js with React, several critical rendering and responsiveness issues emerged. The PDF viewer, now wrapped in a React component, exhibited blank pages, misaligned annotations, and unresponsive UI elements. These issues threatened the core functionality of EchoPDF and required immediate attention.
+
+### Challenges:
+
+1. **Blank Viewer:**
+   Upon initial render, the PDF viewer appeared blank and unresponsive, despite successful integration of the codebases.
+
+2. **Scaling Discrepancies:**
+   The annotation layer and thumbnails were misaligned with the actual PDF content, suggesting a scaling issue between different render layers.
+
+3. **Zoom Functionality:**
+   The zoom feature, critical for PDF viewing, was not functioning correctly within the new React component structure.
+
+4. **CSS Responsiveness:**
+   The original PDF.js CSS, particularly media queries, was not behaving as expected when wrapped in a React component.
+   
+5. **Color Customization:**
+   Implementing a feature to control page background and text color required navigating the complex rendering process of PDF.js.
+   
+### Solution:
+
+### 1. **Debugging Render Issues:**
+   To address the blank viewer, I conducted a deep dive into both React's rendering process and PDF.js's initialization sequence. This involved:
+
+   - Carefully examining the component lifecycle and ensuring PDF.js initialization occurred at the right moment.
+   - Using React's useEffect hook to properly time the PDF.js viewer setup:
+
+```jsx
+useEffect(() => {
+  if (isReady && signedUrl && fileName) {
+    const config = getViewerConfiguration();
+    PDFViewerApplication.run(config, signedUrl, fileName, colorParams);
+  }
+}, [isReady, signedUrl, fileName, colorMode]);
+```
+
+### 2. **Scaling Discrepancies:** 
+The annotation layer and thumbnails were misaligned with the actual PDF content, suggesting a scaling issue between different render layers.
+
+#### Investigation and Findings:
+To address this issue, I conducted a thorough investigation:
+
+1. **React Rendering Analysis:**
+   * I delved into React's rendering process to understand how it interacts with the underlying HTML structure.
+   * This investigation aimed to uncover any potential conflicts between React's virtual DOM and PDF.js's direct DOM manipulations.
+
+2. **Ref Implementation:**
+   * In an attempt to ensure proper synchronization between React and PDF.js, I implemented refs for all relevant PDF.js events, particularly those affecting the annotation layer.
+   * I focused on the wrapper viewer containers, believing they might be key to resolving the scaling issue.
+   * Example of ref implementation:
+
+```jsx
+const viewerContainerRef = useRef(null);
+
+useEffect(() => {
+  if (viewerContainerRef.current) {
+    // Attempted to use the ref for PDF.js initialization or event binding
+    // PDFViewerApplication.initializeViewerComponents(viewerContainerRef.current);
+  }
+}, []);
+```
+
+   * Despite these efforts, the ref approach did not yield the expected results in fixing the scaling discrepancy.
+
+3. **Browser Tools Investigation:**
+   * When the ref approach proved ineffective, I shifted to a more direct investigation using browser developer tools.
+   * I meticulously examined all aspects of the rendered PDF, including the main content layer, text layer, and annotation layer.
+   * Through this process, I discovered that the annotation layer was consistently rendering at approximately 90% of the expected size – a 10% reduction in both width and height.
+
+4. **Comparative Analysis:**
+   * I compared the behavior in my React-wrapped version to the standalone PDF.js implementation.
+   * This comparison confirmed that the scaling issue was unique to the React integration, as it did not exist in the original PDF.js viewer.
+
+#### Conclusion: 
+While I successfully identified the nature and extent of the scaling discrepancy (a 10% reduction), I have not yet implemented a fix or fully determined the root cause of this issue. The problem appears to be a side effect of wrapping PDF.js within a React component, but the exact mechanism causing this scaling difference remains unclear.
+
+#### Next Steps:
+* Further investigation into the interaction between React's rendering cycle and PDF.js's internal scaling mechanisms.
+* Exploration of potential fixes, such as programmatically adjusting the scale of affected layers.
+* Consideration of reaching out to the PDF.js community or React experts for insights on this specific integration challenge.
+
+This scaling discrepancy remains an open issue, highlighting the complexities involved in integrating mature libraries like PDF.js into modern React applications. It serves as a reminder of the unexpected challenges that can arise in such integrations and the importance of thorough, multi-faceted debugging approaches.
+
+### 3. **Zoom Functionality Repair:**
+   The zoom issue stemmed from PDF.js expecting to control the entire window, which was no longer the case in the React setup. To fix this:
+
+   - I removed PDF.js's default window resize listener.
+   - Implemented a custom resize event handling using React refs and ResizeObserver:
+
+```jsx
+useEffect(() => {
+  const resizeObserver = new ResizeObserver(() => {
+    PDFViewerApplication.eventBus.dispatch("resize", {
+      source: viewerContainerRef.current,
+    });
+  });
+
+  const viewerContainer = viewerContainerRef.current;
+  if (viewerContainer) {
+    resizeObserver.observe(viewerContainer);
+  }
+
+  return () => {
+    if (viewerContainer) {
+      resizeObserver.unobserve(viewerContainer);
+    }
+  };
+}, []);
+```
+
+### 4. **CSS Responsiveness Solution:**
+   To address the non-functioning media queries, I developed a system to dynamically apply classes based on the component's size rather than the window size:
+
+```jsx
+useEffect(() => {
+  const resizeObserver = new ResizeObserver(() => {
+    if (viewerContainerRef.current) {
+      const width = viewerContainerRef.current.offsetWidth;
+      const classes = [];
+
+      if (width <= 900) classes.push("toolbar-large");
+      if (width <= 840) classes.push("toolbar-medium");
+      if (width <= 750) classes.push("toolbar-small");
+      if (width <= 690) classes.push("toolbar-extra-small");
+      if (width <= 560) classes.push("toolbar-tiny");
+
+      setContainerClass(classes.join(" "));
+    }
+  });
+
+  const viewerContainer = viewerContainerRef.current;
+  if (viewerContainer) {
+    resizeObserver.observe(viewerContainer);
+  }
+
+  return () => {
+    if (viewerContainer) {
+      resizeObserver.unobserve(viewerContainer);
+    }
+  };
+}, []);
+```
+
+This approach allowed for responsive behavior similar to media queries, but based on the component's dimensions rather than the viewport.
+
+### 5. Color Control Implementation: 
+To enhance user experience, I implemented a feature to control the page background and text color. This required a deep dive into PDF.js's rendering process.
+
+#### Process:
+1. **Investigation:** I conducted a thorough examination of PDF.js's codebase, tracing the rendering process from the high-level PDF application down to the canvas rendering.
+2. **Visualization:** Using draw.io, I created a detailed diagram mapping out all relevant classes, their interactions, and parameter passing. This visual representation was crucial in understanding the complex flow of data and rendering instructions.
+3. **Identifying Injection Points:** Through this analysis, I identified key points where custom color parameters could be injected into the rendering process.
+
+#### Implementation: 
+I created a color mode feature with options for dark, light, and original modes:
+
+```jsx
+const [colorMode, setColorMode] = useState("default"); // 'dark', 'light', 'default'
+
+const toggleColorMode = () => {
+  if (colorMode === "default") {
+    setColorMode("dark");
+  } else if (colorMode === "dark") {
+    setColorMode("light");
+  } else {
+    setColorMode("default");
+  }
+};
+
+const getColorParams = () => {
+  switch (colorMode) {
+    case "dark":
+      return {
+        backgroundColor: "#000000",
+        textColor: "#FFFFFF",
+      };
+    case "light":
+      return {
+        backgroundColor: "#FFFFFF",
+        textColor: "#000000",
+      };
+    default:
+      return {};
+  }
+};
+```
+
+These color parameters are then passed down to the PDF.js initialization:
+
+```jsx
+PDFViewerApplication.run(config, signedUrl, fileName, getColorParams());
+```
+
+Within PDF.js, I modified the rendering process to accept and apply these color parameters, affecting both the page background and text rendering on the canvas.
+
+#### Lessons Learned:
+1. **Deep Dive Benefits:** This process highlighted the value of thoroughly understanding a complex system before attempting modifications. The visual mapping of the PDF.js structure was invaluable in navigating its complexity.
+2. **Extensibility:** By identifying key injection points for color parameters, I've created a foundation for future enhancements, potentially allowing for more granular color control or even custom theming options.
+3. **User Experience Focus:** This feature demonstrates a focus on user needs, providing options for comfortable reading in various lighting conditions.
+4. **Modular Modifications:** The implementation showcases how targeted modifications can add significant functionality without overhauling the entire PDF.js system.
+
+This color control feature not only enhances the current functionality of EchoPDF but also paves the way for more advanced customization options in the future, all while maintaining the core integrity of the PDF.js rendering process.
+
+
+
+### Lessons Learned:
+
+1. **Integration Complexity:**
+   This experience highlighted the complex nature of integrating mature, full-featured libraries like PDF.js into a React ecosystem. It demonstrated the importance of understanding both the React component lifecycle and the internal workings of the integrated library.
+
+2. **Debugging in Complex Systems:**
+   The process of identifying and fixing these issues enhanced my debugging skills, particularly in scenarios involving multiple interacting systems. It emphasized the value of methodical investigation and the use of browser developer tools for pinpointing render and scaling issues.
+
+3. **Creative Problem-Solving:**
+   Addressing the responsiveness issues required thinking outside the conventional CSS paradigms. It taught me to approach styling and layout challenges creatively, especially when working within the constraints of a React component structure.
+
+4. **Performance Considerations:**
+   Implementing custom resize observers and dynamic class applications made me more aware of performance implications in responsive design. It highlighted the need to balance responsiveness with efficient re-rendering in React applications.
+
+5. **Modular Design Benefits:**
+   The challenges reinforced the value of modular design in complex integrations. By encapsulating PDF.js functionality within a React component, I was able to implement custom solutions without extensively modifying the PDF.js core, maintaining future upgrade paths.
+
+This phase of the project was crucial in transforming the theoretical integration of PDF.js and React into a fully functional, responsive PDF viewer component. The solutions implemented not only resolved immediate issues but also laid the groundwork for future enhancements and feature additions in EchoPDF.
+
+
+
+
+
+
+
+
+
+
+
+
