@@ -2199,7 +2199,7 @@ Our pricing includes a 20% margin to cover operational costs while still offerin
 
 ## 8.5 Future Considerations
 
-We are continually evaluating our pricing strategy to ensure it remains competitive and sustainable. Some considerations for the future include:
+I am continually evaluating EchoPDF pricing strategy to ensure it remains competitive and sustainable. Some considerations for the future include:
 
 * Potentially reducing the EchoPro tier price to $12.9/month to make the upgrade from EchoPlus more attractive.
 * Introducing new features such as OCR support, multi-PDF chat, folder chat, and GPT-4 Vision models.
