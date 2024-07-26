@@ -2119,3 +2119,89 @@ Testing the Stripe integration posed unique challenges due to the need to simula
 The Stripe integration process was a significant learning experience, highlighting the complexities of handling real-time payment events and subscription management. While the current implementation provides a solid foundation for EchoPDF's payment system, there's room for improvement in testing methodologies and event handling comprehensiveness. This experience has provided valuable insights into building robust payment systems for SaaS applications.
 
 It's worth noting that testing Stripe was one of the most stressful moments during my EchoPDF development journey. The implications and seriousness surrounding payments meant that I couldn't afford to make any mistakes. The pressure was particularly intense as I was developing this crucial feature while delaying the launch of EchoPDF. The combination of financial responsibility and time constraints made this phase of development especially challenging and anxiety-inducing.
+
+
+# 8. User Tiers and Monetization
+
+## 8.1 Pricing Strategy Overview
+
+EchoPDF's pricing strategy is designed to be competitive and user-friendly, offering a range of features at accessible price points. As a solo developer based in Malaysia, we can offer more competitive pricing compared to many competitors. Our strategy focuses on providing maximum value to users across all tiers, including a feature-rich free tier.
+
+Key aspects of our pricing strategy:
+* Transparent pricing with clearly defined features for each tier
+* Competitive rates leveraging lower operational costs
+* Feature-rich free tier to attract and retain users
+* Paid tiers with significant value additions
+* Credit system for advanced GPT-4 usage
+
+## 8.2 Competitive Analysis
+
+As part of the development process for EchoPDF, extensive market research was conducted to understand the current landscape of AI-powered PDF tools. For those interested in learning more about the competitive environment, the following resources provide valuable insights:
+
+- [How to Chat with Any PDF: Top 10 AI PDF Chat Tools](https://popupsmart.com/blog/how-to-chat-with-any-pdf)
+- [10 Best AI PDF Tools to Try in 2024](https://www.elegantthemes.com/blog/business/best-ai-pdf-tools)
+- [AI PDF Reader: The 10 Best Tools to Try in 2024](https://www.macro.com/blog/ai-pdf-reader) (Note: This link may no longer be active)
+
+These resources helped inform the feature set and pricing strategy of EchoPDF, ensuring that we offer a competitive and valuable service to our users.
+
+## 8.3 Tier Structure and Features
+
+EchoPDF offers three main tiers:
+
+1. Free Tier:
+   * 200 pages total, 10MB per file
+   * 50 Files upload space
+   * 100 questions total (GPT-3.5)
+   * Up to 800 words PDF content retrieval (GPT-3.5)
+   * Early access to features
+
+2. EchoPlus ($9.9/month):
+   * Unlimited uploads, 550 page and 35MB per file max
+   * 100 Files upload space
+   * 60 questions per hour (GPT-3.5)
+   * Up to 1000 words PDF content retrieval (GPT-3.5)
+   * Up to 3000 words PDF content retrieval (GPT-4)
+   * One-time free $3 credit for GPT-4 usage
+   * Access to purchase credits for GPT-4 models
+   * Access to latest GPT-4 models (4-Turbo & 4o)
+   * Early access to features
+   * Email support
+
+3. EchoPro ($13.9/month, considering reduction to $12.9/month):
+   * Unlimited uploads, 800 page and 70MB per file max
+   * 200 Files upload space
+   * 80 questions per hour (GPT-3.5)
+   * Up to 1200 words PDF content retrieval (GPT-3.5)
+   * Up to 3000 words PDF content retrieval (GPT-4)
+   * One-time free $5 credit for GPT-4 usage
+   * Access to purchase credits for GPT-4 models
+   * Access to latest GPT-4 models (4-Turbo & 4o)
+   * Early access to features
+   * Priority email support
+
+## 8.4 Credit System for Advanced Features
+
+EchoPDF implements a credit system for access to advanced GPT-4 models. This system allows users to pay for premium AI capabilities as needed, while keeping base subscription costs low.
+
+Credit purchase options:
+* $5 for 5 credits
+* $10 for 10 credits (5% bonus)
+* $20 for 20 credits (10% bonus)
+* $50 for 50 credits (15% bonus)
+
+GPT-4 model pricing (per 100k words):
+* GPT-4o Input: $0.80 (OpenAI price: $0.67)
+* GPT-4o Output: $2.40 (OpenAI price: $2.00)
+* GPT-4 Turbo Input: $1.61 (OpenAI price: $1.34)
+* GPT-4 Turbo Output: $4.80 (OpenAI price: $4.00)
+
+Our pricing includes a 20% margin to cover operational costs while still offering competitive rates. Only paid tier subscribers can purchase credits for GPT-4 model usage.
+
+## 8.5 Future Considerations
+
+We are continually evaluating our pricing strategy to ensure it remains competitive and sustainable. Some considerations for the future include:
+
+* Potentially reducing the EchoPro tier price to $12.9/month to make the upgrade from EchoPlus more attractive.
+* Introducing new features such as OCR support, multi-PDF chat, folder chat, and GPT-4 Vision models.
+* Adjusting tier limits and features based on user feedback and usage patterns.
+* Exploring partnerships or integrations that could add value to our subscription tiers.
