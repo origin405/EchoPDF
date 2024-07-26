@@ -22,16 +22,13 @@
       - [7.6 Retrieval Augmented Generation (RAG) System](#76-retrieval-augmented-generation-rag-system)
       - [7.7 Pinecone Resource Allocation](#77-pinecone-resource-allocation)
       - [7.8 Stripe Integration and Testing](#78-stripe-integration-and-testing)
-   8. [Custom Feature Spotlights](#8-custom-feature-spotlights)
-      - [Custom Markdown Parser](#custom-markdown-parser)
-      - [Custom Highlight Feature](#custom-highlight-feature)
-   9. [User Tiers and Monetization](#9-user-tiers-and-monetization)
-   10. [Development Journey](#10-development-journey)
+   8. [User Tiers and Monetization](#8-user-tiers-and-monetization)
+   9. [Development Journey](#9-development-journey)
        - [Timeline](#timeline)
        - [Learning Process](#learning-process)
-   11. [Future Development Plans](#11-future-development-plans)
-   12. [Lessons Learned](#12-lessons-learned)
-   13. [Contact Information](#13-contact-information)
+   10. [Future Development Plans](#10-future-development-plans)
+   11. [Lessons Learned](#11-lessons-learned)
+   12. [Contact Information](#12-contact-information)
    
    
    # EchoPDF
