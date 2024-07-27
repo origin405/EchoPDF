@@ -19,7 +19,7 @@
       - [7.3 Resolving Rendering and Responsiveness Issues in PDF.js-React Integration](#73-resolving-rendering-and-responsiveness-issues-in-pdfjs-react-integration)
       - [7.4 Custom Highlight Feature Implementation](#74-custom-highlight-feature-implementation)
       - [7.5 Real-time Streaming and Markdown Parsing](#75-real-time-streaming-and-markdown-parsing)
-      - [7.6 Retrieval Augmented Generation (RAG) System](#76-retrieval-augmented-generation-rag-system)
+      - [7.6 RAG System Implementation](#76-rag-system-implementation)
       - [7.7 Pinecone Resource Allocation](#77-pinecone-resource-allocation)
       - [7.8 Stripe Integration and Testing](#78-stripe-integration-and-testing)
    8. [User Tiers and Monetization](#8-user-tiers-and-monetization)
