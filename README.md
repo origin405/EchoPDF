@@ -1612,20 +1612,20 @@ For a detailed look at the custom markdown parser implementation, including code
 
 This experience serves as a reminder of the importance of research, the value of learning from "mistakes," and the rapid evolution of skills in web development.
 
-
-## 7.6.1 Vector Database Integration (Pinecone)
+## 7.6 RAG System Implementation
+### 7.6.1 Vector Database Integration (Pinecone)
 
 EchoPDF's RAG system relies on efficient storage and retrieval of document vectors. This is achieved through a combination of Pinecone, a vector database, and MongoDB for metadata storage. The integration process involves several key components:
 
-### Embedding Generation:
+#### Embedding Generation:
 * Document text is embedded using OpenAI's Ada-2 model, creating dense vector representations of the content.
 * These embeddings capture the semantic meaning of the text, enabling similarity-based retrieval.
 
-### Vector Storage in Pinecone:
+#### Vector Storage in Pinecone:
 * The generated embeddings are stored in Pinecone, a specialized vector database optimized for similarity search.
 * Each vector is associated with metadata including the original text, page number, and other relevant information.
 
-### Metadata Storage in MongoDB:
+#### Metadata Storage in MongoDB:
 * To optimize retrieval and manage vector IDs efficiently, a separate MongoDB collection is used.
 * The schema for this collection is defined as follows:
 
@@ -1644,12 +1644,12 @@ pdfVectorSchema.index({ _id: 1, userId: 1 });
 
 * This schema allows for efficient lookup of vector IDs associated with a specific PDF and user.
 
-### Vector Retrieval Process:
+#### Vector Retrieval Process:
 1. When a query is received, the system first checks MongoDB for the relevant vector IDs.
 2. Using these IDs, the actual vectors are fetched from Pinecone.
 3. The retrieved vectors, along with their metadata, are then used for similarity matching and context retrieval.
 
-### Efficient Data Flow:
+#### Efficient Data Flow:
 * After retrieval, relevant vector content and metadata are sent to the client.
 * This allows the client to maintain a local copy for quick reference and use in generating the final ChatGPT response.
 
@@ -1661,11 +1661,11 @@ This integrated approach offers several advantages:
 The combination of Pinecone for vector storage and MongoDB for metadata management creates a robust foundation for EchoPDF's RAG system, enabling fast and accurate retrieval of relevant document sections for enhanced AI-powered interactions.
 
 
-## 7.6.2 Efficient Vector Retrieval and Selection
+### 7.6.2 Efficient Vector Retrieval and Selection
 
 A critical component of EchoPDF's RAG system is the efficient retrieval and selection of relevant vectors. This process balances the need for context-relevant information with user-specific constraints and query relevance. The implementation involves several key aspects:
 
-### Vector Selector Algorithm:
+#### Vector Selector Algorithm:
 The core of the selection process is the `vectorSelector` function, which implements a sophisticated algorithm to choose the most relevant vectors. This algorithm considers:
 1. Query relevance: Vectors are categorized based on their similarity scores to the user's query.
 2. Page specificity: Vectors are prioritized based on explicitly mentioned pages or page ranges in the user's query.
@@ -1690,7 +1690,7 @@ const finalizeVectorSelection = (
 };
 ```
 
-### Balancing Page-Specific and Query-Relevant Vectors:
+#### Balancing Page-Specific and Query-Relevant Vectors:
 The system strikes a balance between honoring user-specified pages and including highly relevant content from other parts of the document:
 1. Individual page vectors are given top priority to ensure user-specified content is included.
 2. High-scoring query-relevant vectors (score >= 0.8) are included next to provide context beyond explicitly mentioned pages.
@@ -1698,7 +1698,7 @@ The system strikes a balance between honoring user-specified pages and including
 4. Page range vectors are included to cover broader specified sections.
 5. Remaining space is filled with lower-scoring but still relevant vectors.
 
-### Handling Different User Tiers and Word Limits:
+#### Handling Different User Tiers and Word Limits:
 The system adapts to different user tiers by adjusting the word limit for RAG content:
 * Free tier: 800 words
 * Plus tier: 1000 words
@@ -1719,59 +1719,59 @@ if (
 
 This conditional logic allows for including additional moderately relevant vectors when the word limit permits, providing a richer context for higher-tier users.
 
-### Challenges and Considerations:
+#### Challenges and Considerations:
 1. Balancing Act: Achieving the right balance between page-specific vectors and query-relevant vectors remains an ongoing challenge, requiring continuous refinement based on user feedback and performance metrics.
 2. Handling Large Page Ranges: When users specify large page ranges, the system employs a sampling strategy to ensure diverse coverage without exceeding word limits.
 3. Performance Optimization: The selection algorithm is designed to be efficient, but as the system scales, ongoing optimization may be necessary to maintain low latency.
 4. User Intent Interpretation: The system makes assumptions about user intent when balancing between specified pages and query relevance. These assumptions may need adjustment based on real-world usage patterns.
 
-### Future Improvements:
+#### Future Improvements:
 * Implement more sophisticated scoring mechanisms for vector relevance.
 * Develop adaptive algorithms that learn from user interactions to improve vector selection over time.
 * Explore options for allowing users more control over the balance between page-specificity and query relevance.
 
 This efficient vector retrieval and selection process forms the backbone of EchoPDF's RAG system, enabling contextually relevant and user-tier appropriate responses to queries.
 
-## 7.6.3 Natural Language Processing for Page-Specific Queries
+### 7.6.3 Natural Language Processing for Page-Specific Queries
 
 EchoPDF's RAG system includes a sophisticated approach to handling page-specific queries, which evolved through experimentation and problem-solving. This section details the journey from the initial concept to the current implementation, highlighting the challenges and insights gained along the way.
 
-### Initial Approach: Embedding Page Numbers in Vectors
+#### Initial Approach: Embedding Page Numbers in Vectors
 
-#### Concept:
+##### Concept:
 - The original idea was to embed page number metadata directly into the document vectors stored in Pinecone.
 - The goal was to enable direct retrieval of page-specific content through semantic similarity searches.
 
-#### Implementation Attempt:
+##### Implementation Attempt:
 - Page numbers were included as part of the text content during the embedding process.
 - The hypothesis was that embedding models like Ada-2 would capture the semantics of page numbers along with the document content.
 
-#### Challenges Encountered:
+##### Challenges Encountered:
 - Current embedding techniques, including OpenAI's Ada-2, proved insufficient in capturing the nuanced relationship between page numbers and content in a way that allowed for reliable retrieval.
 - Queries mentioning specific pages or ranges failed to consistently retrieve the correct vectors, indicating that the embedding process wasn't effectively incorporating page number information in a semantically meaningful way.
 
-#### Insights Gained:
+##### Insights Gained:
 - This experiment revealed the limitations of current embedding technologies in handling structured metadata like page numbers alongside unstructured text content.
 - It became clear that a more specialized approach was needed to effectively handle page-specific queries.
 
-### Transition to ChatGPT-Based Solution
+#### Transition to ChatGPT-Based Solution
 
 After recognizing the limitations of the embedding-based approach, EchoPDF pivoted to a more effective solution leveraging ChatGPT's natural language understanding capabilities.
 
-### Current Implementation: ChatGPT Integration for Page Number Extraction
+#### Current Implementation: ChatGPT Integration for Page Number Extraction
 
-#### Approach:
+##### Approach:
 - Instead of relying on vector embeddings to capture page information, the system now uses ChatGPT to extract page numbers and ranges from user queries.
 
-#### Implementation:
+##### Implementation:
 - User queries are processed through a dedicated ChatGPT endpoint designed for page number extraction.
 - The system employs prompt engineering to instruct ChatGPT to focus on identifying and extracting page-related information.
 
-#### Integration with Vector Retrieval:
+##### Integration with Vector Retrieval:
 - Once page numbers are extracted, the system retrieves relevant vectors using their IDs from Pinecone.
 - The content associated with these vectors is then accessed from a local copy, allowing for efficient page-specific content retrieval.
 
-#### Example Implementation:
+##### Example Implementation:
 ```javascript
 const pageData = await fetchChatgptPageCheck(
   userMessage.content,
@@ -1796,22 +1796,22 @@ const pageData = await fetchChatgptPageCheck(
 #### Handling Ambiguity:
 - The system must interpret and handle cases where page references in queries are unclear or have multiple possible interpretations.
 
-### Future Improvements:
+#### Future Improvements:
 
-#### Hybrid Approaches:
+##### Hybrid Approaches:
 - Exploring combinations of rule-based systems for simple cases and AI-based extraction for complex queries to optimize performance and reduce API calls.
 
-#### Continuous Learning:
+##### Continuous Learning:
 - Implementing feedback mechanisms to improve page number extraction accuracy over time based on user interactions.
 
-#### Caching and Optimization:
+##### Caching and Optimization:
 - For frequently accessed documents, caching common page-specific query results to reduce repeated processing.
 
 The evolution from attempting to embed page numbers directly in vectors to the current ChatGPT-based solution demonstrates EchoPDF's commitment to innovative problem-solving. This journey highlights the importance of flexibility in approach and the value of leveraging specialized AI capabilities to enhance the overall effectiveness of the RAG system. The current implementation not only solves the immediate challenge of page-specific queries but also provides a foundation for future enhancements in natural language understanding within document interaction systems.
 
-## Future Enhancements:
+### Future Enhancements:
 
-### 1. Chat with Folder Feature:
+#### 1. Chat with Folder Feature:
    * Implement vector creation immediately after successful S3 upload to ensure all PDFs in a folder are ready for RAG processing.
    * Explore two potential approaches for folder interactions:
      a. Concatenated PDF View: Allow users to view and chat with all PDFs in a folder as a single document.
@@ -1822,7 +1822,7 @@ The evolution from attempting to embed page numbers directly in vectors to the c
       * For individual PDF chat: Maintain original page numbers but develop a method to reference content across different documents in the folder.
    * Consider adapting or potentially removing the page-specific feature for folder-level chats, depending on usability and technical constraints.
 
-### 2. Optimization of Multi-Document RAG:
+#### 2. Optimization of Multi-Document RAG:
    * Research methods to balance processing time, storage requirements, and query performance when dealing with multiple PDFs in a folder.
    * Investigate techniques for maintaining context coherence when retrieving information from various documents within a folder.
 
@@ -1830,11 +1830,11 @@ These enhancements present complex challenges that will require careful planning
 
 The process of expanding EchoPDF's capabilities to handle folder-level interactions will likely involve revisiting and adapting many aspects of the current system. This iterative development process is an exciting opportunity to deepen my understanding of document processing, vector databases, and large-scale RAG implementations.
 
-## 7.6.5 Challenges and Optimizations
+### 7.6.5 Challenges and Optimizations
 
 In developing the RAG system for EchoPDF, I encountered several challenges that required careful problem-solving and optimization. This section outlines the key issues faced and the solutions implemented to enhance the system's performance.
 
-### 1. Handling Large Documents and Vector Batches
+#### 1. Handling Large Documents and Vector Batches
 
 **Challenge:** Processing large PDF documents could generate a number of vectors exceeding Pinecone's single batch upload limit of 4MB.
 
@@ -1857,7 +1857,7 @@ if (vectorsSize > MAX_SIZE) {
 
 This approach ensures that large documents can be processed and stored effectively, maintaining system reliability for documents of varying sizes.
 
-### 2. Efficient Vector Retrieval and Usage
+#### 2. Efficient Vector Retrieval and Usage
 
 **Challenge:** Retrieving and using vector data efficiently for each query.
 
@@ -1868,7 +1868,7 @@ This approach ensures that large documents can be processed and stored effective
 
 This approach reduces the need for repeated large data transfers between the server and client, improving response times and reducing server load.
 
-### 3. Balancing Vector Selection
+#### 3. Balancing Vector Selection
 
 **Challenge:** Selecting the most relevant vectors while respecting user tier limits and maintaining query relevance.
 
