@@ -1566,7 +1566,7 @@ While PDF.js later introduced its own highlighting feature, this project demonst
 
 For a detailed explanation of the implementation, including code snippets and in-depth discussion of the challenges faced, please visit the [PDF.js Custom Highlight Feature repository](https://github.com/origin405/pdfjs-custom-highlight-feature).
 
-[Note: Once you've added the video demonstration, you can mention it here as well, e.g., "A video demonstration of the feature in action is available in the repository."]
+[Video Demo Coming Soon]
 
 
 
