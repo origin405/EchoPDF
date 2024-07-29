@@ -2335,7 +2335,11 @@ The coming weeks and months will be crucial in determining whether this intense 
 
 The development of EchoPDF has been a comprehensive learning experience, providing valuable insights into full-stack development, project management, and the challenges of bringing a simple yet complex application to market. These lessons will hopefully prove invaluable in my future development endeavors and professional growth.
 
-Thank you for reading, it means a lot to me.
+
+
+## 11. Contact Information
+Thank you for reading, it means a lot to me. If you find what I do interesting, and you want to offer me a job, partnership, or projects, please shoot me an email at marvinnlhy@gmail.com.
+I'll reply as soon as possible. Thank you, and that's all folks. 
 
 Sincerely,
 Hong Yu (Marvin)
