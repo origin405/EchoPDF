@@ -70,7 +70,7 @@ As both a potential startup product and a comprehensive portfolio piece, I have 
    - Early December 2023: I started learning full-stack development for the first time, with only 4 months of front-end experience I've acquired from my internship with FusionEx Malaysia working with am charts and knockoutJS. 
    - Early January 2024: I completed initial MVP for final year project, deployed on Heroku after submission
    - February 2024: I completed final exams and pratically graduated with a general CS degree
-   - Late February 2024: I decided to expand EchoPDF into a comprehensive startup/product-like application
+   - Late February 2024: I decided and started to expand my final year project into a comprehensive startup/product-like application
    - July 15th 2024: Officially launched EchoPDF
    
    This project marks a rapid transition from a beginner in full-stack development to creating and deploying a complex'ish, AI-integrated web application. The development process hopefully shows my ability to quickly learn and implement new technologies effectively:
