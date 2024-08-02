@@ -2121,9 +2121,9 @@ The Stripe integration process was a significant learning experience, highlighti
 It's worth noting that testing Stripe was one of the most stressful moments during my EchoPDF development journey. The implications and seriousness surrounding payments meant that I couldn't afford to make any mistakes. The pressure was particularly intense as I was developing this crucial feature while delaying the launch of EchoPDF. The combination of financial responsibility and time constraints made this phase of development especially challenging and anxiety-inducing.
 
 
-# 8. User Tiers and Monetization
+## 8. User Tiers and Monetization
 
-## 8.1 Pricing Strategy Overview
+### 8.1 Pricing Strategy Overview
 
 EchoPDF's pricing strategy is designed to be competitive and user-friendly, offering a range of features at accessible price points. As a solo developer based in Malaysia, we can offer more competitive pricing compared to many competitors. Our strategy focuses on providing maximum value to users across all tiers, including a feature-rich free tier.
 
@@ -2134,7 +2134,7 @@ Key aspects of our pricing strategy:
 * Paid tiers with significant value additions
 * Credit system for advanced GPT-4 usage
 
-## 8.2 Competitive Analysis
+### 8.2 Competitive Analysis
 
 As part of the development process for EchoPDF, extensive market research was conducted to understand the current landscape of AI-powered PDF tools. For those interested in learning more about the competitive environment, the following resources provide valuable insights:
 
@@ -2144,7 +2144,7 @@ As part of the development process for EchoPDF, extensive market research was co
 
 These resources helped inform the feature set and pricing strategy of EchoPDF, ensuring that we offer a competitive and valuable service to our users.
 
-## 8.3 Tier Structure and Features
+### 8.3 Tier Structure and Features
 
 EchoPDF offers three main tiers:
 
@@ -2179,7 +2179,7 @@ EchoPDF offers three main tiers:
    * Early access to features
    * Priority email support
 
-## 8.4 Credit System for Advanced Features
+### 8.4 Credit System for Advanced Features
 
 EchoPDF implements a credit system for access to advanced GPT-4 models. This system allows users to pay for premium AI capabilities as needed, while keeping base subscription costs low.
 
@@ -2197,7 +2197,7 @@ GPT-4 model pricing (per 100k words):
 
 Our pricing includes a 20% margin to cover operational costs while still offering competitive rates. Only paid tier subscribers can purchase credits for GPT-4 model usage.
 
-## 8.5 Future Considerations
+### 8.5 Future Considerations
 
 I am continually evaluating EchoPDF pricing strategy to ensure it remains competitive and sustainable. Some considerations for the future include:
 
