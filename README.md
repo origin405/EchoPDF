@@ -63,7 +63,7 @@ As both a potential startup product and a comprehensive portfolio piece, I have 
    - Text embedding and vector operations for enhanced document analysis
    - Custom algorithms for context-aware document content selection
    
-   EchoPDF represents a significant personal and professional journey in software development. What began as my final year project in early December 2023 evolved into a comprehensive full-stack application over the course of about seven months.
+   EchoPDF represents a significant personal and professional journey in software development. What began as my final year project in early December 2023 evolved into a comprehensive full-stack application over the course of five months, with about 4 months of work (excluding burnt outs, family trips, and breaks).
    
    Key milestones in the project's development:
    
