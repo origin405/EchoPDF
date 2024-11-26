@@ -1,4 +1,5 @@
    # EchoPDF
+   **NOTE: Site has been taken down as I ran out of free GCP credits. I'm putting an almost certain permanent hold to this project as I'm focusing on on-rails.com, my current full time job. Thank you for your understanding!**
    EchoPDF: AI-powered PDF interaction and management platform. This repo provides an overview of the project, highlighting key features, technical challenges, and implementation details of a full-stack web application built with MERN, Pinecone, Stripe, Clerk, S3, deployed on GCP.
    
    ## Table of Contents
